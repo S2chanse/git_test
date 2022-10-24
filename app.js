@@ -1,13 +1,16 @@
+const dotEnv = require("dotenv");
 const express = require("express");
 const { restart } = require("nodemon");
 const path = require("path");
 const morgan = require("morgan");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+
+dotEnv.config();
 //1
 const app = express();
 
-app.set("port", process.env.PORT | 3000);
+app.set("port", process.env.PORT | process.env.server_port);
 //미들웨어 역할 head 컨트롤러 보단 말그대로 미들웨어 중간 단계에서 테스트
 app.use(morgan("dev"));
 //요청경로
@@ -18,7 +21,7 @@ app.use(
   session({
     saveUninitialized: false,
     resave: false,
-    secret: "test",
+    secret: "test", //암호화하는 서명=> 다른사람이 안다? 위조가 가능하다.
     cookie: {
       httpOnly: true,
     },
